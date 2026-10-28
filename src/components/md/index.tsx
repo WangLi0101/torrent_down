@@ -91,7 +91,7 @@ export function Card({ className = "", ...props }: HTMLAttributes<HTMLDivElement
   return (
     <div
       className={cn(
-        "rounded-4xl border border-line bg-card shadow-card",
+        "min-w-0 rounded-4xl border border-line bg-card shadow-card",
         className,
       )}
       {...props}
@@ -119,14 +119,14 @@ export function SectionCard({
   return (
     <section
       className={cn(
-        "rounded-4xl border border-line bg-card shadow-card",
+        "min-w-0 rounded-4xl border border-line bg-card shadow-card",
         className,
       )}
     >
       <div className={cn("p-5 sm:p-6", bodyClassName)}>
         {(title || action) && (
-          <div className="mb-5 flex items-start justify-between gap-3">
-            <div className="flex min-w-0 items-center gap-3">
+          <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
+            <div className="flex min-w-0 flex-1 basis-48 items-center gap-3">
               {icon && (
                 <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
                   {icon}
@@ -143,7 +143,7 @@ export function SectionCard({
                 )}
               </div>
             </div>
-            {action && <div className="shrink-0">{action}</div>}
+            {action && <div className="ml-auto shrink-0">{action}</div>}
           </div>
         )}
         {children}

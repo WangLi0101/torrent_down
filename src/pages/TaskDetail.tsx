@@ -215,7 +215,7 @@ export default function TaskDetail() {
         ))}
       </section>
 
-      <div className="grid items-start gap-5 xl:grid-cols-[1.5fr_1fr]">
+      <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <SectionCard
           title="文件"
           subtitle="每个文件的下载进度"

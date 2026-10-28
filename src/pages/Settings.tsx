@@ -252,7 +252,7 @@ export default function Settings() {
                         Math.round(Math.max(0, Number(event.target.value)) * 1024 * 1024),
                       )
                     }
-                    className="min-w-0 flex-1 bg-transparent text-body-sm text-ink outline-none"
+                    className="min-w-0 flex-1 bg-transparent text-body-sm tabular-nums text-ink outline-none"
                   />
                   <span className="text-caption text-ink-3">MiB/s</span>
                 </div>
@@ -272,7 +272,7 @@ export default function Settings() {
                         Math.round(Math.max(0, Number(event.target.value)) * 1024 * 1024),
                       )
                     }
-                    className="min-w-0 flex-1 bg-transparent text-body-sm text-ink outline-none"
+                    className="min-w-0 flex-1 bg-transparent text-body-sm tabular-nums text-ink outline-none"
                   />
                   <span className="text-caption text-ink-3">MiB/s</span>
                 </div>
@@ -293,7 +293,7 @@ export default function Settings() {
               </div>
               <div>
                 <span className="text-ink-3">端口</span>
-                <p className="mt-1.5 font-mono text-body-sm text-ink">
+                <p className={cn("mt-1.5 text-body-sm text-ink", draft.streamPort > 0 && "font-mono")}>
                   {draft.streamPort || "启动时自动分配"}
                 </p>
               </div>
@@ -319,7 +319,7 @@ export default function Settings() {
         <div className="space-y-5 xl:sticky xl:top-0">
           <Card className="p-5">
             <div className="flex items-center justify-between gap-2">
-              <h2 className="text-body font-semibold text-ink">实时预览</h2>
+              <h2 className="text-title text-ink">实时预览</h2>
               <span className="rounded-lg bg-primary/10 px-2 py-1 text-caption font-medium text-primary">
                 {mode === "dark" ? "深色" : "浅色"} · {accent.name}
               </span>
@@ -342,12 +342,12 @@ export default function Settings() {
                   <span className="truncate text-mini font-semibold text-ink">
                     正在下载 · 示例任务
                   </span>
-                  <span className="text-mini font-bold text-primary">68%</span>
+                  <span className="text-mini font-semibold tabular-nums text-primary">68%</span>
                 </div>
                 <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface-2">
                   <div className="h-full w-[68%] rounded-full bg-primary" />
                 </div>
-                <div className="mt-2 flex items-center justify-between text-mini text-ink-3">
+                <div className="mt-2 flex items-center justify-between text-mini tabular-nums text-ink-3">
                   <span>8.4 MB/s</span>
                   <span>剩余 5 分钟</span>
                 </div>
@@ -369,7 +369,7 @@ export default function Settings() {
           </Card>
 
           <Card className="p-5">
-            <h2 className="text-body font-semibold text-ink">当前配置</h2>
+            <h2 className="text-title text-ink">当前配置</h2>
             <div className="mt-4 space-y-3 text-body-sm">
               <SummaryRow label="主题模式" value={mode === "dark" ? "深色" : "浅色"} />
               <SummaryRow label="强调色" value={accent.name} />
