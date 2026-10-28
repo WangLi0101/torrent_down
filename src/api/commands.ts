@@ -24,6 +24,8 @@ export const commands = {
     isTauri ? call("pause_task", { taskId }) : mockApi.pauseTask(taskId),
   resumeTask: (taskId: number): Promise<void> =>
     isTauri ? call("resume_task", { taskId }) : mockApi.resumeTask(taskId),
+  reconnectTask: (taskId: number): Promise<void> =>
+    isTauri ? call("reconnect_task", { taskId }) : mockApi.reconnectTask(taskId),
   removeTask: (taskId: number, deleteFiles: boolean): Promise<void> =>
     isTauri ? call("remove_task", { taskId, deleteFiles }) : mockApi.removeTask(taskId),
   getStreamUrl: (taskId: number, fileIdx: number): Promise<string> =>

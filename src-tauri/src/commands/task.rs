@@ -44,6 +44,11 @@ pub async fn resume_task(engine: State<'_, Arc<Engine>>, task_id: usize) -> CmdR
 }
 
 #[tauri::command]
+pub async fn reconnect_task(engine: State<'_, Arc<Engine>>, task_id: usize) -> CmdResult<()> {
+    engine.reconnect_task(task_id).await
+}
+
+#[tauri::command]
 pub async fn remove_task(
     engine: State<'_, Arc<Engine>>,
     task_id: usize,

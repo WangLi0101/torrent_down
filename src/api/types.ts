@@ -46,6 +46,25 @@ export interface TaskDetail extends TaskSummary {
   trackers: string[];
   pieceBitmap: string;
   totalPieces: number;
+  network: NetworkDiagnostics;
+}
+
+export interface NetworkDiagnostics {
+  available: boolean;
+  seenPeers: number;
+  connectingPeers: number;
+  queuedPeers: number;
+  failedPeers: number;
+  transferringPeers: number;
+  receivedBytes: number;
+  idleSeconds?: number;
+  dhtNodes: number;
+  peers: {
+    clientName: string;
+    connection: string;
+    receivedBytes: number;
+    downSpeed: number;
+  }[];
 }
 
 export interface MetadataEvent {

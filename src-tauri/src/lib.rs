@@ -3,6 +3,7 @@ mod engine;
 mod error;
 mod events;
 mod models;
+mod network;
 mod store;
 
 use engine::Engine;
@@ -50,6 +51,7 @@ pub fn run() {
             commands::task::get_task_detail,
             commands::task::pause_task,
             commands::task::resume_task,
+            commands::task::reconnect_task,
             commands::task::remove_task,
             commands::stream::get_stream_url,
             commands::settings::get_settings,

@@ -1,21 +1,27 @@
 use crate::commands::magnet::parse_magnet_input;
 use crate::error::{ApiError, CmdResult};
-use crate::models::{MetadataEvent, Settings, TaskDetail, TaskState, TaskSummary, TorrentFileMeta};
+use crate::models::{
+    MetadataEvent, NetworkDiagnostics, PeerDiagnostic, Settings, TaskDetail, TaskState,
+    TaskSummary, TorrentFileMeta,
+};
+use crate::network::TransferMonitor;
 use crate::store::{Store, TaskRecord};
 use base64::Engine as Base64Engine;
 use librqbit::api::TorrentIdOrHash;
 use librqbit::http_api::{HttpApi, HttpApiOptions};
 use librqbit::{
-    AddTorrent, AddTorrentOptions, AddTorrentResponse, Api, ListenerMode, ListenerOptions, Session,
-    SessionOptions, SessionPersistenceConfig, TorrentStatsState,
+    AddTorrent, AddTorrentOptions, AddTorrentResponse, Api, ConnectionOptions, ListenerMode,
+    ListenerOptions, PeerConnectionOptions, Session, SessionOptions, SessionPersistenceConfig,
+    TorrentStats, TorrentStatsState,
 };
 use librqbit_dualstack_sockets::{BindOpts, TcpListener};
-use std::collections::HashSet;
+use parking_lot::Mutex;
+use std::collections::{HashMap, HashSet};
 use std::net::{Ipv4Addr, SocketAddr};
 use std::num::NonZeroU32;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 use tauri::{AppHandle, Emitter};
 
 pub struct Engine {
@@ -26,6 +32,8 @@ pub struct Engine {
     pub stream_port: u16,
     default_download_dir: String,
     public_trackers: HashSet<url::Url>,
+    peer_hints: Mutex<HashMap<usize, Vec<SocketAddr>>>,
+    transfer_monitors: Mutex<HashMap<usize, TransferMonitor>>,
 }
 
 impl Engine {
@@ -47,6 +55,14 @@ impl Engine {
             SessionOptions {
                 // Session-wide trackers also cover metadata lookup and restored tasks.
                 trackers: public_trackers.clone(),
+                connect: Some(ConnectionOptions {
+                    peer_opts: Some(PeerConnectionOptions {
+                        connect_timeout: Some(Duration::from_secs(10)),
+                        read_write_timeout: Some(Duration::from_secs(30)),
+                        keep_alive_interval: Some(Duration::from_secs(10)),
+                    }),
+                    ..Default::default()
+                }),
                 fastresume: true,
                 persistence: Some(SessionPersistenceConfig::Json {
                     folder: Some(data_dir.join("session")),
@@ -91,6 +107,8 @@ impl Engine {
             stream_port,
             default_download_dir: default_download_dir.to_string_lossy().into_owned(),
             public_trackers,
+            peer_hints: Mutex::new(HashMap::new()),
+            transfer_monitors: Mutex::new(HashMap::new()),
         });
         let settings = engine.get_settings()?;
         engine.set_speed_limit(Some(settings.download_limit), Some(settings.upload_limit))?;
@@ -251,8 +269,16 @@ impl Engine {
             self.fail_task(id, &error.message).await;
             return;
         }
+        // Keep discovery results across the metadata preview and download confirmation.
+        let initial_peers = response
+            .seen_peers
+            .into_iter()
+            .take(256)
+            .collect::<Vec<_>>();
+        self.peer_hints.lock().insert(id, initial_peers.clone());
         let options = AddTorrentOptions {
             paused: true,
+            initial_peers: Some(initial_peers),
             only_files: Some(selected.clone()),
             output_folder: Some(record.output_dir),
             overwrite: true,
@@ -328,6 +354,7 @@ impl Engine {
         self.session.delete(TorrentIdOrHash::Id(id), false).await?;
         let options = AddTorrentOptions {
             paused: false,
+            initial_peers: self.peer_hints.lock().get(&id).cloned(),
             only_files: Some(only_files.clone()),
             output_folder: Some(output_dir.clone()),
             overwrite: true,
@@ -345,6 +372,7 @@ impl Engine {
             }
         }
         self.store.confirm_task(id, &only_files, &output_dir)?;
+        self.transfer_monitors.lock().remove(&id);
         self.emit_progress(id);
         Ok(())
     }
@@ -352,6 +380,7 @@ impl Engine {
     pub async fn pause_task(&self, id: usize) -> CmdResult<()> {
         let handle = self.handle(id)?;
         self.session.pause(&handle).await?;
+        self.transfer_monitors.lock().remove(&id);
         self.store.set_state(id, TaskState::Paused.as_str())?;
         self.emit_progress(id);
         Ok(())
@@ -360,9 +389,19 @@ impl Engine {
     pub async fn resume_task(&self, id: usize) -> CmdResult<()> {
         let handle = self.handle(id)?;
         self.session.unpause(&handle).await?;
+        self.transfer_monitors.lock().remove(&id);
         self.store.set_state(id, TaskState::Downloading.as_str())?;
         self.emit_progress(id);
         Ok(())
+    }
+
+    pub async fn reconnect_task(&self, id: usize) -> CmdResult<()> {
+        let stats = self.handle(id)?.stats();
+        if !matches!(stats.state, TorrentStatsState::Live) || stats.finished {
+            return Err(ApiError::invalid("只能对正在下载的任务重新连接"));
+        }
+        self.pause_task(id).await?;
+        self.resume_task(id).await
     }
 
     pub async fn remove_task(&self, id: usize, delete_files: bool) -> CmdResult<()> {
@@ -373,6 +412,8 @@ impl Engine {
                 .await?;
         }
         self.store.remove_task(id)?;
+        self.peer_hints.lock().remove(&id);
+        self.transfer_monitors.lock().remove(&id);
         Ok(())
     }
 
@@ -455,13 +496,84 @@ impl Engine {
             .map(|tracker| tracker.to_string())
             .collect::<Vec<_>>();
         trackers.sort_unstable();
+        let network = self.network_diagnostics(id, handle.as_ref(), stats.as_ref());
         Ok(TaskDetail {
             summary: self.summary(&record),
             files,
             trackers,
             piece_bitmap,
             total_pieces,
+            network,
         })
+    }
+
+    fn network_diagnostics(
+        &self,
+        id: usize,
+        handle: Option<&Arc<librqbit::ManagedTorrent>>,
+        stats: Option<&TorrentStats>,
+    ) -> NetworkDiagnostics {
+        let mut network = NetworkDiagnostics {
+            dht_nodes: self
+                .session
+                .get_dht()
+                .map(|dht| {
+                    let stats = dht.stats();
+                    stats.routing_table_size + stats.routing_table_size_v6
+                })
+                .unwrap_or(0),
+            ..Default::default()
+        };
+        let Some(live_stats) = stats.and_then(|stats| stats.live.as_ref()) else {
+            self.transfer_monitors.lock().remove(&id);
+            return network;
+        };
+        let aggregate = &live_stats.snapshot.peer_stats;
+        network.available = true;
+        network.seen_peers = aggregate.seen;
+        network.connecting_peers = aggregate.connecting;
+        network.queued_peers = aggregate.queued;
+        network.failed_peers = aggregate.dead;
+        network.received_bytes = live_stats.snapshot.fetched_bytes;
+        let mut peers = handle
+            .and_then(|handle| handle.live())
+            .map(|live| live.per_peer_stats_snapshot(Default::default()).peers)
+            .unwrap_or_default()
+            .into_iter()
+            .map(|(address, peer)| {
+                (
+                    address,
+                    PeerDiagnostic {
+                        client_name: peer.client_name.unwrap_or_else(|| "未知客户端".into()),
+                        connection: peer
+                            .conn_kind
+                            .map(|kind| kind.to_string())
+                            .unwrap_or_default(),
+                        received_bytes: peer.counters.fetched_bytes,
+                        down_speed: 0,
+                    },
+                )
+            })
+            .collect::<Vec<_>>();
+        let now = Instant::now();
+        let idle_seconds = self
+            .transfer_monitors
+            .lock()
+            .entry(id)
+            .or_insert_with(|| TransferMonitor::new(network.received_bytes, now))
+            .sample(network.received_bytes, &mut peers, now);
+        if !stats.is_some_and(|stats| stats.finished) {
+            network.idle_seconds = Some(idle_seconds);
+        }
+        network.transferring_peers = peers.iter().filter(|(_, peer)| peer.down_speed > 0).count();
+        network.peers = peers.into_iter().map(|(_, peer)| peer).collect();
+        network.peers.sort_by(|a, b| {
+            b.down_speed
+                .cmp(&a.down_speed)
+                .then_with(|| b.received_bytes.cmp(&a.received_bytes))
+                .then_with(|| a.client_name.cmp(&b.client_name))
+        });
+        network
     }
 
     fn handle(&self, id: usize) -> CmdResult<Arc<librqbit::ManagedTorrent>> {

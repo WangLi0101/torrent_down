@@ -1,6 +1,7 @@
 # Public tracker list snapshot: 2026-10-28.
 # Source: https://github.com/ngosang/trackerslist (trackers_best.txt)
 # Bundled locally so startup does not depend on fetching a remote list.
+# HTTPS entries: trackers_all_https.txt from the same source and date.
 udp://tracker.opentrackr.org:1337/announce
 udp://open.stealth.si:80/announce
 udp://tracker.torrent.eu.org:451/announce
@@ -21,3 +22,6 @@ http://tracker.renfei.net:8080/announce
 udp://tracker.peerfect.org:6969/announce
 udp://tracker.opentrackr.com:6969/announce
 udp://tracker.ilibr.org:6969/announce
+https://tracker.pmman.tech/announce
+https://tracker.nekomi.cn/announce
+https://open.ftorrent.com/announce

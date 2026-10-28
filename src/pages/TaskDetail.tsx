@@ -19,6 +19,7 @@ import { useTaskEvents } from "../api/events";
 import type { TaskDetail as TaskDetailType, TaskSummary } from "../api/types";
 import { FileList } from "../components/FileList";
 import { PieceMap } from "../components/PieceMap";
+import { NetworkStatus } from "../components/NetworkStatus";
 import { stateLabels } from "../components/TaskCard";
 import {
   Button,
@@ -37,21 +38,43 @@ export default function TaskDetail() {
   const navigate = useNavigate();
   const notify = useSnackbar();
   const [detail, setDetail] = useState<TaskDetailType>();
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [busy, setBusy] = useState(false);
 
-  const load = useCallback(() => {
-    void commands
-      .getTaskDetail(taskId)
-      .then(setDetail)
-      .catch((error) => notify(errorMessage(error), "error"));
-  }, [taskId, notify]);
-  useEffect(load, [load]);
+  useEffect(() => setDetail(undefined), [taskId]);
+  useEffect(() => {
+    let disposed = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let errorShown = false;
+    const refresh = async () => {
+      try {
+        const next = await commands.getTaskDetail(taskId);
+        if (!disposed) setDetail(next);
+        errorShown = false;
+      } catch (error) {
+        if (!disposed && !errorShown) notify(errorMessage(error), "error");
+        errorShown = true;
+      } finally {
+        if (!disposed) timer = setTimeout(() => void refresh(), 2000);
+      }
+    };
+    void refresh();
+    return () => {
+      disposed = true;
+      clearTimeout(timer);
+    };
+  }, [taskId, refreshKey, notify]);
 
   const onProgress = useCallback(
     (task: TaskSummary) => {
       if (task.id !== taskId) return;
-      setDetail((current) => (current ? { ...current, ...task } : current));
-      if (Math.random() < 0.2)
-        void commands.getTaskDetail(taskId).then(setDetail);
+      setDetail((current) => {
+        if (!current) return current;
+        const network = current.state === task.state
+          ? { ...current.network, transferringPeers: Math.min(current.network.transferringPeers, task.peers) }
+          : { ...current.network, available: false, transferringPeers: 0, peers: [], idleSeconds: undefined };
+        return { ...current, ...task, network };
+      });
     },
     [taskId],
   );
@@ -86,7 +109,7 @@ export default function TaskDetail() {
       icon: Users,
       label: "已连接节点",
       value: detail.peers.toLocaleString(),
-      note: `${detail.trackers.length} 个 Tracker`,
+      note: `${detail.network.transferringPeers} 个节点正在传输`,
       tone: "secondary" as const,
     },
     {
@@ -106,12 +129,29 @@ export default function TaskDetail() {
   ];
 
   const toggle = async () => {
+    setBusy(true);
     try {
       if (detail.state === "Paused") await commands.resumeTask(taskId);
       else await commands.pauseTask(taskId);
-      load();
+      setRefreshKey((key) => key + 1);
     } catch (error) {
       notify(errorMessage(error), "error");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const reconnect = async () => {
+    setBusy(true);
+    try {
+      await commands.reconnectTask(taskId);
+      setRefreshKey((key) => key + 1);
+      notify("正在重新发现和连接下载节点");
+    } catch (error) {
+      notify(errorMessage(error), "error");
+      setRefreshKey((key) => key + 1);
+    } finally {
+      setBusy(false);
     }
   };
 
@@ -149,7 +189,7 @@ export default function TaskDetail() {
             <div className="flex shrink-0 gap-2">
               <Button
                 variant="outlined"
-                disabled={detail.state === "Seeding"}
+                disabled={detail.state === "Seeding" || busy}
                 onClick={() => void toggle()}
               >
                 {detail.state === "Paused" ? (
@@ -214,6 +254,8 @@ export default function TaskDetail() {
           </Card>
         ))}
       </section>
+
+      <NetworkStatus detail={detail} busy={busy} onReconnect={() => void reconnect()} />
 
       <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <SectionCard

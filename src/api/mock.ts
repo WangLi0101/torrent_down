@@ -2,6 +2,7 @@ import type {
   AutoSelectMode,
   MagnetInfo,
   MetadataEvent,
+  NetworkDiagnostics,
   Settings,
   TaskDetail,
   TaskSummary,
@@ -18,6 +19,10 @@ const videoFiles: TorrentFileMeta[] = [
 ];
 
 const now = Date.now();
+const emptyNetwork = (): NetworkDiagnostics => ({
+  available: false, seenPeers: 0, connectingPeers: 0, queuedPeers: 0,
+  failedPeers: 0, transferringPeers: 0, receivedBytes: 0, dhtNodes: 0, peers: [],
+});
 const tasks: TaskDetail[] = [
   {
     id: 1,
@@ -38,6 +43,7 @@ const tasks: TaskDetail[] = [
     trackers: ["udp://tracker.opentrackr.org:1337", "udp://exodus.desync.com:6969"],
     pieceBitmap: "",
     totalPieces: 286,
+    network: emptyNetwork(),
   },
   {
     id: 2,
@@ -57,6 +63,7 @@ const tasks: TaskDetail[] = [
     trackers: [],
     pieceBitmap: "",
     totalPieces: 182,
+    network: emptyNetwork(),
   },
   {
     id: 3,
@@ -76,6 +83,7 @@ const tasks: TaskDetail[] = [
     trackers: [],
     pieceBitmap: "",
     totalPieces: 410,
+    network: emptyNetwork(),
   },
 ];
 
@@ -83,6 +91,11 @@ const listeners = new Map<string, Set<(payload: unknown) => void>>();
 const emit = <T,>(event: string, payload: T) => {
   listeners.get(event)?.forEach((listener) => listener(payload));
 };
+
+function emitProgress(task: TaskDetail) {
+  const { files, trackers, pieceBitmap, totalPieces, network, ...summary } = task;
+  emit<TaskSummary>("task:progress", summary);
+}
 
 export function mockListen<T>(event: string, callback: (payload: T) => void): Promise<() => void> {
   const set = listeners.get(event) ?? new Set();
@@ -105,7 +118,7 @@ if (!isTauri) {
         task.state = "Seeding";
         task.downSpeed = 0;
       }
-      emit<TaskSummary>("task:progress", { ...task });
+      emitProgress(task);
     });
   }, 1200);
 }
@@ -182,6 +195,7 @@ export const mockApi = {
       trackers: parsed.trackers,
       pieceBitmap: "",
       totalPieces: 286,
+      network: emptyNetwork(),
     };
     tasks.unshift(task);
     emit<MetadataEvent>("task:metadata-resolved", {
@@ -201,7 +215,7 @@ export const mockApi = {
     task.state = "Downloading";
     task.downSpeed = 6_200_000;
     task.peers = 12;
-    emit("task:progress", { ...task });
+    emitProgress(task);
   },
   async listTasks() {
     await delay(180);
@@ -209,7 +223,15 @@ export const mockApi = {
   },
   async getTaskDetail(taskId: number) {
     await delay(120);
-    return clone(requiredTask(taskId));
+    const task = clone(requiredTask(taskId));
+    const active = task.state === "Downloading" || task.state === "Seeding";
+    task.network = {
+      ...emptyNetwork(), available: active, seenPeers: active ? task.peers + 12 : 0,
+      transferringPeers: task.downSpeed > 0 ? Math.min(task.peers, 8) : 0,
+      receivedBytes: task.downloadedBytes, dhtNodes: 146,
+      idleSeconds: task.state === "Downloading" ? 0 : undefined,
+    };
+    return task;
   },
   async pauseTask(taskId: number) {
     const task = requiredTask(taskId);
@@ -217,14 +239,20 @@ export const mockApi = {
     task.downSpeed = 0;
     task.upSpeed = 0;
     task.peers = 0;
-    emit("task:progress", { ...task });
+    emitProgress(task);
   },
   async resumeTask(taskId: number) {
     const task = requiredTask(taskId);
     task.state = "Downloading";
     task.downSpeed = 5_800_000;
     task.peers = 11;
-    emit("task:progress", { ...task });
+    emitProgress(task);
+  },
+  async reconnectTask(taskId: number) {
+    if (requiredTask(taskId).state !== "Downloading") throw new Error("只能对正在下载的任务重新连接");
+    await this.pauseTask(taskId);
+    await delay(350);
+    await this.resumeTask(taskId);
   },
   async removeTask(taskId: number) {
     const index = tasks.findIndex((task) => task.id === taskId);

@@ -84,6 +84,31 @@ pub struct TaskDetail {
     pub trackers: Vec<String>,
     pub piece_bitmap: String,
     pub total_pieces: u32,
+    pub network: NetworkDiagnostics,
+}
+
+#[derive(Debug, Clone, Default, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NetworkDiagnostics {
+    pub available: bool,
+    pub seen_peers: u32,
+    pub connecting_peers: u32,
+    pub queued_peers: u32,
+    pub failed_peers: u32,
+    pub transferring_peers: usize,
+    pub received_bytes: u64,
+    pub idle_seconds: Option<u64>,
+    pub dht_nodes: usize,
+    pub peers: Vec<PeerDiagnostic>,
+}
+
+#[derive(Debug, Clone, Default, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PeerDiagnostic {
+    pub client_name: String,
+    pub connection: String,
+    pub received_bytes: u64,
+    pub down_speed: u64,
 }
 
 #[derive(Debug, Clone, Serialize)]
