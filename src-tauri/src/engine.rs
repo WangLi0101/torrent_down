@@ -10,6 +10,7 @@ use librqbit::{
     SessionOptions, SessionPersistenceConfig, TorrentStatsState,
 };
 use librqbit_dualstack_sockets::{BindOpts, TcpListener};
+use std::collections::HashSet;
 use std::net::{Ipv4Addr, SocketAddr};
 use std::num::NonZeroU32;
 use std::path::{Path, PathBuf};
@@ -24,6 +25,7 @@ pub struct Engine {
     pub app: AppHandle,
     pub stream_port: u16,
     default_download_dir: String,
+    public_trackers: HashSet<url::Url>,
 }
 
 impl Engine {
@@ -33,9 +35,18 @@ impl Engine {
         default_download_dir: PathBuf,
         data_dir: PathBuf,
     ) -> CmdResult<Arc<Self>> {
+        let public_trackers = include_str!("data/public-trackers.txt")
+            .lines()
+            .map(str::trim)
+            .filter(|line| !line.is_empty() && !line.starts_with('#'))
+            .map(url::Url::parse)
+            .collect::<Result<HashSet<_>, _>>()
+            .map_err(ApiError::internal)?;
         let session = Session::new_with_opts(
             default_download_dir.clone(),
             SessionOptions {
+                // Session-wide trackers also cover metadata lookup and restored tasks.
+                trackers: public_trackers.clone(),
                 fastresume: true,
                 persistence: Some(SessionPersistenceConfig::Json {
                     folder: Some(data_dir.join("session")),
@@ -79,6 +90,7 @@ impl Engine {
             app,
             stream_port,
             default_download_dir: default_download_dir.to_string_lossy().into_owned(),
+            public_trackers,
         });
         let settings = engine.get_settings()?;
         engine.set_speed_limit(Some(settings.download_limit), Some(settings.upload_limit))?;
@@ -423,9 +435,26 @@ impl Engine {
                 base64::engine::general_purpose::STANDARD.encode(bitmap.into_bitvec().into_vec())
             })
             .unwrap_or_default();
-        let trackers = parse_magnet_input(&record.magnet_uri)
-            .map(|magnet| magnet.trackers)
-            .unwrap_or_default();
+        let mut trackers = handle
+            .as_ref()
+            .map(|handle| handle.shared().trackers.clone())
+            .unwrap_or_else(|| {
+                parse_magnet_input(&record.magnet_uri)
+                    .map(|magnet| {
+                        magnet
+                            .trackers
+                            .iter()
+                            .filter_map(|tracker| url::Url::parse(tracker).ok())
+                            .collect()
+                    })
+                    .unwrap_or_default()
+            });
+        trackers.extend(self.public_trackers.iter().cloned());
+        let mut trackers = trackers
+            .into_iter()
+            .map(|tracker| tracker.to_string())
+            .collect::<Vec<_>>();
+        trackers.sort_unstable();
         Ok(TaskDetail {
             summary: self.summary(&record),
             files,

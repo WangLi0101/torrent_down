@@ -245,7 +245,7 @@ export default function TaskDetail() {
 
           <SectionCard
             title="Tracker 与网络"
-            subtitle="当前任务使用的节点发现方式"
+            subtitle="已配置的 Tracker，用于发现下载节点"
             icon={<Radio className="h-[18px] w-[18px]" />}
           >
             {detail.trackers.length ? (
