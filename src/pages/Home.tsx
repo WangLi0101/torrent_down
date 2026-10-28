@@ -10,6 +10,7 @@ import {
   ListVideo,
   LoaderCircle,
   Play,
+  Search,
   ShieldCheck,
   Zap,
 } from "lucide-react";
@@ -185,6 +186,21 @@ export default function HomePage() {
           </form>
         </div>
       </section>
+
+      <button
+        type="button"
+        onClick={() => navigate("/search")}
+        className="group flex w-full cursor-pointer items-center gap-3 rounded-3xl border border-primary/15 bg-primary/5 px-5 py-4 text-left transition-colors hover:bg-primary/10"
+      >
+        <span className="grid size-10 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
+          <Search size={19} />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-body font-medium text-ink">还没有磁力链接？</span>
+          <span className="mt-1 block text-body-sm text-ink-2">前往磁力搜索，在应用内浏览常用资源站点</span>
+        </span>
+        <ArrowRight size={18} className="shrink-0 text-primary transition-transform group-hover:translate-x-1" />
+      </button>
 
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard

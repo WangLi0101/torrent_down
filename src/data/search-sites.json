@@ -1,0 +1,23 @@
+[
+  {
+    "id": "skrbt",
+    "name": "SkrBT",
+    "url": "https://skrbtso.top/",
+    "description": "中文磁力搜索，按资源名称查找种子与磁力链接。",
+    "tag": "中文搜索"
+  },
+  {
+    "id": "bt4g",
+    "name": "BT4G",
+    "url": "https://bt4gprx.com/",
+    "description": "综合种子搜索，支持视频、音频、文档等分类。",
+    "tag": "综合索引"
+  },
+  {
+    "id": "bitsearch",
+    "name": "Bitsearch",
+    "url": "https://bitsearch.eu/",
+    "description": "按关键词检索磁力资源，浏览分类与最新收录。",
+    "tag": "分类检索"
+  }
+]

@@ -43,6 +43,7 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             commands::magnet::parse_magnet,
+            commands::search::open_search_site,
             commands::task::add_task,
             commands::task::confirm_task,
             commands::task::list_tasks,

@@ -8,7 +8,10 @@ pub fn parse_magnet_input(text: &str) -> CmdResult<MagnetInfo> {
     if trimmed.is_empty() {
         return Err(ApiError::invalid("请输入磁力链接或 info-hash"));
     }
-    let extracted = if trimmed.len() >= 9 && trimmed[..9].eq_ignore_ascii_case("magnet:?") {
+    let extracted = if trimmed
+        .get(.."magnet:?".len())
+        .is_some_and(|prefix| prefix.eq_ignore_ascii_case("magnet:?"))
+    {
         trimmed
     } else {
         let lower = trimmed.to_ascii_lowercase();
@@ -100,5 +103,6 @@ mod tests {
     fn rejects_invalid_input() {
         assert!(parse_magnet_input("not a magnet").is_err());
         assert!(parse_magnet_input("magnet:?dn=missing").is_err());
+        assert!(parse_magnet_input("电影名称🎬").is_err());
     }
 }

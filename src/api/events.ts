@@ -1,7 +1,20 @@
 import { listen } from "@tauri-apps/api/event";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { useEffect } from "react";
 import { isTauri, mockListen } from "./mock";
 import type { ApiError, MetadataEvent, TaskSummary } from "./types";
+
+export function onSearchMagnet(callback: (magnet: string) => void) {
+  return isTauri
+    ? getCurrentWebviewWindow().listen<string>("search:magnet", (event) => callback(event.payload))
+    : Promise.resolve(() => {});
+}
+
+export function onSearchError(callback: (message: string) => void) {
+  return isTauri
+    ? getCurrentWebviewWindow().listen<string>("search:error", (event) => callback(event.payload))
+    : Promise.resolve(() => {});
+}
 
 export function onTaskProgress(callback: (task: TaskSummary) => void) {
   return isTauri

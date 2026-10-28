@@ -3,6 +3,7 @@ import {
   Home,
   ListVideo,
   Plus,
+  Search,
   Settings,
   ShieldCheck,
   type LucideIcon,
@@ -19,6 +20,7 @@ interface NavItem {
 
 const ITEMS: NavItem[] = [
   { to: "/", label: "首页", title: "下载中心", icon: Home },
+  { to: "/search", label: "搜索", title: "磁力搜索", icon: Search },
   { to: "/tasks", label: "任务", title: "下载任务", icon: ListVideo },
 ];
 

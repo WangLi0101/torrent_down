@@ -6,6 +6,7 @@ import { IconButton } from "./md";
 
 const PAGE_META: Record<string, { title: string; subtitle: string }> = {
   "/": { title: "下载中心", subtitle: "粘贴磁力链接，边下边播" },
+  "/search": { title: "磁力搜索", subtitle: "浏览常用站点，找到资源后直接添加任务" },
   "/tasks": { title: "下载任务", subtitle: "管理所有下载、分片与播放进度" },
   "/task/new": { title: "添加任务", subtitle: "选择要下载与播放的文件" },
   "/settings": { title: "设置", subtitle: "下载策略、播放服务与界面外观" },

@@ -7,6 +7,10 @@ const call = <T,>(command: string, args?: Record<string, unknown>): Promise<T> =
   isTauri ? invoke<T>(command, args) : Promise.reject(new Error(`Missing mock: ${command}`));
 
 export const commands = {
+  openSearchSite: (siteId: string): Promise<void> =>
+    isTauri
+      ? call("open_search_site", { siteId })
+      : Promise.reject(new Error("请在桌面应用中使用 WebView 访问搜索站点")),
   parseMagnet: (text: string): Promise<MagnetInfo> =>
     isTauri ? call("parse_magnet", { text }) : mockApi.parseMagnet(text),
   addTask: (magnet: string): Promise<{ taskId: number }> =>

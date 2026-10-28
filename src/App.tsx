@@ -6,6 +6,7 @@ import {
   Route,
   Routes,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import { MobileNav, NavRail } from "./components/NavRail";
 import { TopBar } from "./components/TopBar";
@@ -15,6 +16,41 @@ import Tasks from "./pages/Tasks";
 import TaskDetail from "./pages/TaskDetail";
 import Player from "./pages/Player";
 import Settings from "./pages/Settings";
+import SearchPage from "./pages/Search";
+import { onSearchError, onSearchMagnet } from "./api/events";
+import { errorMessage } from "./api/commands";
+import { useSnackbar } from "./hooks/useSnackbar";
+
+function SearchEvents() {
+  const navigate = useNavigate();
+  const notify = useSnackbar();
+
+  useEffect(() => {
+    let disposed = false;
+    const unlisteners: (() => void)[] = [];
+    const register = async (listener: Promise<() => void>) => {
+      try {
+        const unlisten = await listener;
+        if (disposed) unlisten();
+        else unlisteners.push(unlisten);
+      } catch (error) {
+        if (!disposed) notify(errorMessage(error), "error");
+      }
+    };
+    void register(onSearchMagnet((magnet) => {
+      if (!disposed) navigate(`/task/new?magnet=${encodeURIComponent(magnet)}`);
+    }));
+    void register(onSearchError((message) => {
+      if (!disposed) notify(message, "error");
+    }));
+    return () => {
+      disposed = true;
+      unlisteners.forEach((unlisten) => unlisten());
+    };
+  }, [navigate, notify]);
+
+  return null;
+}
 
 function Shell() {
   const { pathname } = useLocation();
@@ -48,9 +84,11 @@ function Shell() {
 export default function App() {
   return (
     <HashRouter>
+      <SearchEvents />
       <Routes>
         <Route element={<Shell />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/search" element={<SearchPage />} />
           <Route path="/task/new" element={<NewTask />} />
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/tasks/:id" element={<TaskDetail />} />
