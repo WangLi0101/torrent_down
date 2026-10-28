@@ -157,7 +157,7 @@ export default function NewTask() {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="inline-flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-[13px] font-medium text-ink-2 transition-colors hover:bg-surface-1 hover:text-ink"
+          className="inline-flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-body-sm font-medium text-ink-2 transition-colors hover:bg-surface-1 hover:text-ink"
         >
           <ArrowLeft className="h-4 w-4" />
           返回
@@ -174,13 +174,13 @@ export default function NewTask() {
                 {index > 0 && <ChevronRight className="h-3 w-3 text-ink-3" />}
                 <span
                   className={cn(
-                    "flex items-center gap-1.5 text-[12px] font-medium",
+                    "flex items-center gap-1.5 text-caption font-medium",
                     active ? "text-primary" : complete ? "text-ink" : "text-ink-3",
                   )}
                 >
                   <span
                     className={cn(
-                      "grid size-5 place-items-center rounded-full text-[11px]",
+                      "grid size-5 place-items-center rounded-full text-caption",
                       active
                         ? "bg-primary text-on-primary"
                         : complete
@@ -203,8 +203,8 @@ export default function NewTask() {
           <div className="mx-auto grid size-14 place-items-center rounded-3xl bg-danger/10 text-danger">
             <Magnet size={25} />
           </div>
-          <h2 className="mt-5 text-[20px] font-semibold tracking-tight text-ink">暂时无法获取内容</h2>
-          <p className="mx-auto mt-3 max-w-md text-[14px] leading-6 text-ink-2">
+          <h2 className="mt-5 text-page-title font-semibold text-ink">暂时无法获取内容</h2>
+          <p className="mx-auto mt-3 max-w-md text-body leading-6 text-ink-2">
             {error}
           </p>
           <div className="mt-7 flex justify-center gap-2">
@@ -220,17 +220,17 @@ export default function NewTask() {
             <div className="grid size-20 place-items-center rounded-3xl bg-primary/10 text-primary">
               <Link2 size={29} />
             </div>
-            <h2 className="mt-6 text-[20px] font-semibold tracking-tight text-ink">
+            <h2 className="mt-6 text-page-title font-semibold text-ink">
               正在发现资源
             </h2>
-            <p className="mt-2.5 max-w-sm text-[14px] leading-6 text-ink-2">
+            <p className="mt-2.5 max-w-sm text-body leading-6 text-ink-2">
               通过 DHT 和 Tracker 连接节点，获取文件信息。冷门资源可能需要几分钟。
             </p>
-            <div className="mt-6 flex items-center gap-2 rounded-full bg-surface-1/70 px-4 py-2 text-[12px] text-ink-2">
+            <div className="mt-6 flex items-center gap-2 rounded-full bg-surface-1/70 px-4 py-2 text-caption text-ink-2">
               <Spinner size={14} />
               {taskId ? "正在交换种子元数据" : "正在初始化下载引擎"}
             </div>
-            <p className="mt-7 max-w-full truncate rounded-xl bg-surface-1/60 px-4 py-2 font-mono text-[11px] text-ink-3">
+            <p className="mt-7 max-w-full truncate rounded-xl bg-surface-1/60 px-4 py-2 font-mono text-caption text-ink-3">
               {magnet}
             </p>
             {taskId && (
@@ -249,17 +249,17 @@ export default function NewTask() {
                   <Chip tone="success" icon={<Sparkles className="h-3 w-3" />}>
                     元数据已就绪
                   </Chip>
-                  <span className="font-mono text-[11px] uppercase tracking-wide text-ink-3">
+                  <span className="font-mono text-caption text-ink-3">
                     {detail.infoHash.slice(0, 16)}…
                   </span>
                 </div>
                 <h2
-                  className="mt-3 text-balance text-[20px] font-semibold leading-snug tracking-tight text-ink sm:text-[24px]"
+                  className="mt-3 break-words text-page-title text-ink sm:text-heading"
                   title={detail.name}
                 >
                   {detail.name}
                 </h2>
-                <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px] text-ink-2">
+                <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-body-sm tabular-nums text-ink-2">
                   <span>
                     <span className="font-semibold text-ink">{detail.files.length}</span> 个文件
                   </span>
@@ -285,7 +285,7 @@ export default function NewTask() {
                       key={mode}
                       type="button"
                       onClick={() => setSelection(mode)}
-                      className="cursor-pointer rounded-lg px-2.5 py-1.5 text-[12px] font-medium text-ink-2 transition-colors hover:bg-card hover:text-ink"
+                      className="cursor-pointer rounded-lg px-2.5 py-1.5 text-caption font-medium text-ink-2 transition-colors hover:bg-card hover:text-ink"
                     >
                       {mode === "videos" ? "仅视频" : mode === "all" ? "全选" : "清空"}
                     </button>
@@ -312,7 +312,7 @@ export default function NewTask() {
                   <input
                     value={outputDir}
                     onChange={(event) => setOutputDir(event.target.value)}
-                    className="min-w-0 flex-1 bg-transparent text-[13px] text-ink outline-none"
+                    className="min-w-0 flex-1 bg-transparent text-body-sm text-ink outline-none"
                     aria-label="下载目录"
                   />
                 </div>
@@ -320,7 +320,7 @@ export default function NewTask() {
                   浏览
                 </Button>
               </div>
-              <p className="mt-3 flex items-start gap-1.5 text-[12px] leading-5 text-ink-3">
+              <p className="mt-3 flex items-start gap-1.5 text-caption leading-5 text-ink-3">
                 <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                 未勾选的文件不会分配磁盘空间，也不会占用下载带宽。
               </p>
@@ -328,12 +328,12 @@ export default function NewTask() {
 
             <Card className="p-5">
               <div className="flex items-center justify-between gap-3">
-                <span className="text-[12px] text-ink-2">本次下载</span>
-                <span className="text-[12px] text-ink-2">
+                <span className="text-caption text-ink-2">本次下载</span>
+                <span className="text-caption text-ink-2">
                   {selected.length} / {detail.files.length} 个文件
                 </span>
               </div>
-              <p className="mt-2 text-[26px] font-semibold tracking-tight text-ink tabular-nums">
+              <p className="mt-2 text-stat-lg text-ink">
                 {formatBytes(totalSize)}
               </p>
               <ProgressBar
@@ -356,7 +356,7 @@ export default function NewTask() {
               <button
                 type="button"
                 onClick={() => navigate("/tasks")}
-                className="mt-2 h-9 w-full cursor-pointer rounded-xl text-[13px] font-medium text-ink-2 transition-colors hover:bg-surface-1 hover:text-ink"
+                className="mt-2 h-9 w-full cursor-pointer rounded-xl text-body-sm font-medium text-ink-2 transition-colors hover:bg-surface-1 hover:text-ink"
               >
                 稍后决定
               </button>

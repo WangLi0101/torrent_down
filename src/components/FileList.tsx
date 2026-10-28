@@ -48,13 +48,13 @@ export function FileList({
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
-              <p className="truncate text-[14px] font-semibold text-ink" title={file.path}>
+              <p className="truncate text-body font-medium text-ink" title={file.path}>
                 {fileName(file.path)}
               </p>
               <FolderOpen className="hidden shrink-0 text-ink-3 sm:block" size={12} />
             </div>
             <p
-              className="mt-0.5 truncate text-[12px] text-ink-3"
+              className="mt-1 truncate text-caption tabular-nums text-ink-3"
               title={file.path}
             >
               {readOnly ? file.path : `${formatBytes(file.size)} · ${fileExtension(file.path)}`}
@@ -65,7 +65,7 @@ export function FileList({
           </div>
           <div className="flex shrink-0 items-center gap-2">
             {readOnly && (
-              <span className="w-11 text-right text-[11px] font-medium tabular-nums text-ink-2">
+              <span className="w-11 text-right text-caption font-medium tabular-nums text-ink-2">
                 {file.included ? `${Math.floor(file.progress * 100)}%` : "未选择"}
               </span>
             )}

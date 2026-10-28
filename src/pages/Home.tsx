@@ -98,20 +98,20 @@ export default function HomePage() {
       <section className="overflow-hidden rounded-5xl border border-line bg-card shadow-card">
         <div className="grid gap-8 p-6 sm:p-8 lg:grid-cols-[1.02fr_1fr] lg:items-center lg:gap-12">
           <div className="min-w-0">
-            <span className="inline-flex items-center gap-2 rounded-full bg-primary/8 px-3 py-1.5 text-[11px] font-medium text-primary">
+            <span className="inline-flex items-center gap-2 rounded-full bg-primary/8 px-3 py-1.5 text-caption font-medium text-primary">
               <span className="size-1.5 rounded-full bg-primary" />
               边下边播 · 本地优先
             </span>
-            <h2 className="mt-4 text-balance text-[28px] font-semibold leading-[1.3] tracking-[-0.02em] text-ink sm:text-[34px]">
+            <h2 className="mt-4 text-balance text-hero text-ink sm:text-hero-lg">
               下载还没结束，
               <br />
               <span className="text-primary">精彩已经开始。</span>
             </h2>
-            <p className="mt-3 max-w-md text-balance text-[14px] leading-6 text-ink-2">
+            <p className="mt-3 max-w-md text-balance text-body leading-6 text-ink-2">
               粘贴磁力链接，勾选想看的内容。TorrNet 会优先下载播放所需分片，
               让你在最少的等待里进入画面。
             </p>
-            <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px] text-ink-3">
+            <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-caption text-ink-3">
               {FEATURES.map(({ icon: Icon, label }) => (
                 <span key={label} className="inline-flex items-center gap-1.5">
                   <Icon className="h-3.5 w-3.5 text-primary/80" />
@@ -126,8 +126,8 @@ export default function HomePage() {
             className="rounded-2xl border border-primary/15 bg-linear-to-br from-primary/8 to-primary/3 p-4 sm:p-5"
           >
             <div className="mb-3">
-              <p className="text-[14px] font-semibold text-primary">从磁力链接开始</p>
-              <p className="mt-1 text-[12px] text-ink-2">
+              <p className="text-body font-medium text-primary">从磁力链接开始</p>
+              <p className="mt-1 text-caption text-ink-2">
                 支持 magnet 链接、40 位 hex 或 32 位 base32
               </p>
             </div>
@@ -141,7 +141,7 @@ export default function HomePage() {
                 aria-label="磁力链接"
                 spellCheck={false}
                 autoFocus
-                className="h-full min-w-0 flex-1 bg-transparent font-mono text-[13px] text-ink outline-none placeholder:font-sans placeholder:text-ink-3"
+                className="h-full min-w-0 flex-1 bg-transparent font-mono text-body-sm text-ink outline-none placeholder:font-sans placeholder:text-ink-3"
               />
               <IconButton
                 label="从剪贴板粘贴"
@@ -167,7 +167,7 @@ export default function HomePage() {
               {!parsing && <ArrowRight className="h-4 w-4" />}
             </Button>
 
-            <div className="mt-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-[12px] text-ink-3">
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 text-caption text-ink-3">
               <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
                 <ShieldCheck className="h-3.5 w-3.5 text-primary/80" />
                 仅在本地解析，保护隐私
@@ -225,7 +225,7 @@ export default function HomePage() {
           <button
             type="button"
             onClick={() => navigate("/tasks")}
-            className="inline-flex cursor-pointer items-center gap-1 rounded-lg px-2 py-1.5 text-[12px] font-semibold text-ink-2 transition-colors hover:bg-surface-1 hover:text-primary"
+            className="inline-flex cursor-pointer items-center gap-1 rounded-lg px-2 py-1.5 text-caption font-semibold text-ink-2 transition-colors hover:bg-surface-1 hover:text-primary"
           >
             全部任务
             <ArrowRight className="h-3 w-3" />
@@ -252,10 +252,10 @@ export default function HomePage() {
             <span className="grid size-12 place-items-center rounded-2xl bg-primary/10 text-primary">
               <ListVideo className="h-5 w-5" />
             </span>
-            <p className="mt-3 text-[14px] font-semibold text-ink">
+            <p className="mt-3 text-body font-semibold text-ink">
               还没有下载任务
             </p>
-            <p className="mt-1 max-w-xs text-[13px] leading-5 text-ink-3">
+            <p className="mt-1 max-w-xs text-body-sm leading-5 text-ink-3">
               在上方粘贴第一个磁力链接，解析后即可选择文件并开始下载。
             </p>
           </div>
@@ -287,15 +287,15 @@ function StatCard({
   return (
     <Card className="p-4 sm:p-5">
       <div className="flex items-center justify-between gap-2">
-        <span className="text-[12px] font-medium text-ink-2">{label}</span>
+        <span className="text-caption font-medium text-ink-2">{label}</span>
         <span className={`grid size-8 place-items-center rounded-xl ${tones[tone]}`}>
           {icon}
         </span>
       </div>
-      <p className="mt-3 truncate text-[22px] font-semibold tracking-tight text-ink tabular-nums">
+      <p className="mt-3 truncate text-stat text-ink">
         {value}
       </p>
-      <p className="mt-1 truncate text-[12px] text-ink-3">{note}</p>
+      <p className="mt-1 truncate text-caption text-ink-3">{note}</p>
     </Card>
   );
 }

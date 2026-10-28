@@ -121,7 +121,7 @@ export default function TaskDetail() {
         <button
           type="button"
           onClick={() => navigate("/tasks")}
-          className="inline-flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-[13px] font-medium text-ink-2 transition-colors hover:bg-surface-1 hover:text-ink"
+          className="inline-flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-body-sm font-medium text-ink-2 transition-colors hover:bg-surface-1 hover:text-ink"
         >
           <ArrowLeft className="h-4 w-4" />
           返回任务列表
@@ -134,14 +134,14 @@ export default function TaskDetail() {
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <Chip tone={stateTone}>{stateLabels[detail.state]}</Chip>
-                <span className="font-mono text-[11px] uppercase tracking-wide text-ink-3">
+                <span className="font-mono text-caption text-ink-3">
                   {detail.infoHash.slice(0, 16)}…
                 </span>
               </div>
-              <h2 className="mt-3 text-balance text-[22px] font-semibold leading-snug tracking-[-0.02em] text-ink sm:text-[28px]">
+              <h2 className="mt-3 break-words text-page-title text-ink sm:text-heading">
                 {detail.name}
               </h2>
-              <p className="mt-3 flex items-center gap-1.5 text-[12px] text-ink-3">
+              <p className="mt-3 flex items-center gap-1.5 text-caption text-ink-3">
                 <FolderOpen className="h-3.5 w-3.5 shrink-0" />
                 <span className="truncate">{detail.outputDir}</span>
               </p>
@@ -169,18 +169,18 @@ export default function TaskDetail() {
           <div className="relative mt-7">
             <div className="mb-2.5 flex items-end justify-between gap-3">
               <div>
-                <span className="text-[12px] text-ink-2">整体进度</span>
-                <p className="mt-0.5 text-[12px] text-ink-3">
+                <span className="text-caption text-ink-2">整体进度</span>
+                <p className="mt-0.5 text-caption tabular-nums text-ink-3">
                   {formatBytes(detail.downloadedBytes)} / {formatBytes(detail.totalSize)}
                 </p>
               </div>
-              <span className="text-[30px] font-semibold leading-none tabular-nums text-primary">
+              <span className="text-stat-lg text-primary">
                 {Math.floor(detail.progress * 100)}
-                <span className="ml-0.5 text-sm">%</span>
+                <span className="ml-0.5 text-body">%</span>
               </span>
             </div>
             <ProgressBar value={detail.progress} className="h-2" />
-            <div className="mt-2.5 flex justify-between text-[12px] text-ink-3">
+            <div className="mt-2.5 flex justify-between text-caption tabular-nums text-ink-3">
               <span>{formatSpeed(detail.downSpeed)}</span>
               <span>顺序下载 · 为流畅播放优化</span>
             </div>
@@ -192,7 +192,7 @@ export default function TaskDetail() {
         {stats.map(({ icon: Icon, label, value, note, tone }) => (
           <Card key={label} className="p-4 sm:p-5">
             <div className="flex items-center justify-between gap-2">
-              <span className="text-[12px] font-medium text-ink-2">{label}</span>
+              <span className="text-caption font-medium text-ink-2">{label}</span>
               <span
                 className={`grid size-8 place-items-center rounded-xl ${
                   tone === "primary"
@@ -207,10 +207,10 @@ export default function TaskDetail() {
                 <Icon className="h-4 w-4" />
               </span>
             </div>
-            <p className="mt-3 truncate text-[22px] font-semibold tracking-tight text-ink tabular-nums">
+            <p className="mt-3 truncate text-stat text-ink">
               {value}
             </p>
-            <p className="mt-1 truncate text-[12px] text-ink-3">{note}</p>
+            <p className="mt-1 truncate text-caption text-ink-3">{note}</p>
           </Card>
         ))}
       </section>
@@ -221,7 +221,7 @@ export default function TaskDetail() {
           subtitle="每个文件的下载进度"
           icon={<HardDrive className="h-[18px] w-[18px]" />}
           action={
-            <span className="text-[12px] text-ink-3">{detail.files.length} 项</span>
+            <span className="text-caption text-ink-3">{detail.files.length} 项</span>
           }
           bodyClassName="p-0"
         >
@@ -257,7 +257,7 @@ export default function TaskDetail() {
                   >
                     <Globe2 className="h-3.5 w-3.5 shrink-0 text-ink-3" />
                     <span
-                      className="truncate font-mono text-[11px] text-ink-2"
+                      className="truncate font-mono text-caption text-ink-2"
                       title={tracker}
                     >
                       {tracker}
@@ -266,7 +266,7 @@ export default function TaskDetail() {
                 ))}
               </div>
             ) : (
-              <p className="rounded-2xl border border-dashed border-line-strong bg-surface-1/40 p-4 text-[13px] leading-5 text-ink-3">
+              <p className="rounded-2xl border border-dashed border-line-strong bg-surface-1/40 p-4 text-body-sm leading-5 text-ink-3">
                 使用 DHT 分布式节点发现，无额外 Tracker。
               </p>
             )}

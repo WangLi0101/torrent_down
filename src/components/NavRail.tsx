@@ -67,7 +67,7 @@ export function NavRail() {
               </span>
               <span
                 className={cn(
-                  "text-[11px] font-medium transition-colors duration-200",
+                  "text-caption font-medium transition-colors duration-200",
                   active
                     ? "font-semibold text-primary"
                     : "text-ink-3 group-hover:text-ink-2",
@@ -90,13 +90,13 @@ export function NavRail() {
           <span className="grid h-11 w-11 place-items-center rounded-2xl bg-primary text-on-primary transition-transform duration-200 group-hover:scale-105 group-active:scale-95">
             <Plus className="h-5 w-5" strokeWidth={2.4} />
           </span>
-          <span className="text-[11px] font-semibold text-primary">新建</span>
+          <span className="text-caption font-semibold text-primary">新建</span>
         </button>
       </div>
 
       <div className="flex-1" />
 
-      <div className="mb-4 flex flex-col items-center gap-1.5 text-[11px] font-medium text-ink-3">
+      <div className="mb-4 flex flex-col items-center gap-1.5 text-caption font-medium text-ink-3">
         <ShieldCheck className="h-[17px] w-[17px] text-success" />
         本地引擎就绪
       </div>
@@ -124,7 +124,7 @@ export function NavRail() {
         </span>
         <span
           className={cn(
-            "text-[11px] font-medium",
+            "text-caption font-medium",
             isActive("/settings")
               ? "font-semibold text-primary"
               : "text-ink-3 group-hover:text-ink-2",
@@ -134,7 +134,7 @@ export function NavRail() {
         </span>
       </button>
 
-      <span className="mt-3 text-[10px] font-semibold tracking-[0.14em] text-ink-3/70">
+      <span className="mt-3 text-mini font-semibold tracking-[0.14em] text-ink-3/70">
         V0.1
       </span>
     </aside>
@@ -157,7 +157,7 @@ export function MobileNav() {
             type="button"
             onClick={() => navigate(to)}
             className={cn(
-              "flex w-16 cursor-pointer flex-col items-center gap-1 text-[11px] font-medium",
+              "flex w-16 cursor-pointer flex-col items-center gap-1 text-caption font-medium",
               active ? "text-primary" : "text-ink-3",
             )}
           >
@@ -169,7 +169,7 @@ export function MobileNav() {
       <button
         type="button"
         onClick={() => navigate("/")}
-        className="flex w-16 cursor-pointer flex-col items-center gap-1 text-[11px] font-semibold text-primary"
+        className="flex w-16 cursor-pointer flex-col items-center gap-1 text-caption font-semibold text-primary"
       >
         <span className="grid h-9 w-14 place-items-center rounded-full bg-primary text-on-primary">
           <Plus size={19} strokeWidth={2.4} />
@@ -180,7 +180,7 @@ export function MobileNav() {
         type="button"
         onClick={() => navigate("/settings")}
         className={cn(
-          "flex w-16 cursor-pointer flex-col items-center gap-1 text-[11px] font-medium",
+          "flex w-16 cursor-pointer flex-col items-center gap-1 text-caption font-medium",
           isActive("/settings") ? "text-primary" : "text-ink-3",
         )}
       >

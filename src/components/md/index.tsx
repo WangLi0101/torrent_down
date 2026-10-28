@@ -50,11 +50,11 @@ export function Button({
       type={type}
       disabled={disabled || loading}
       className={cn(
-        "relative inline-flex select-none items-center justify-center font-semibold transition-all duration-200",
+        "relative inline-flex select-none items-center justify-center whitespace-nowrap font-medium transition-all duration-200",
         "active:scale-[0.985] disabled:pointer-events-none",
         size === "sm"
-          ? "h-9 gap-1.5 rounded-xl px-3 text-[12px]"
-          : "h-11 gap-2 rounded-xl px-4 text-[14px]",
+          ? "h-9 gap-1.5 rounded-xl px-3 text-label"
+          : "h-11 gap-2 rounded-xl px-4 text-body leading-none",
         variants[variant],
         fullWidth && "w-full",
         className,
@@ -133,11 +133,11 @@ export function SectionCard({
                 </span>
               )}
               <div className="min-w-0">
-                <h2 className="truncate text-[16px] font-semibold tracking-tight text-ink">
+                <h2 className="text-title text-ink">
                   {title}
                 </h2>
                 {subtitle && (
-                  <p className="mt-0.5 truncate text-[12px] text-ink-2">
+                  <p className="mt-1 text-body-sm text-ink-2">
                     {subtitle}
                   </p>
                 )}
@@ -174,7 +174,7 @@ export function Chip({
   return (
     <span
       className={cn(
-        "inline-flex h-6 items-center gap-1 rounded-lg border px-2 text-[11px] font-semibold leading-none tracking-wide",
+        "inline-flex h-6 shrink-0 items-center gap-1 whitespace-nowrap rounded-lg border px-2 text-caption font-medium leading-none",
         tones[tone],
         className,
       )}
@@ -300,12 +300,12 @@ export function Dialog({
           <div>
             <h2
               id={titleId}
-              className="text-xl font-bold tracking-tight text-ink"
+              className="text-page-title text-ink"
             >
               {title}
             </h2>
             {description && (
-              <p id={descriptionId} className="mt-2 text-sm leading-6 text-ink-2">{description}</p>
+              <p id={descriptionId} className="mt-2 text-body leading-6 text-ink-2">{description}</p>
             )}
           </div>
           <IconButton label="关闭" onClick={onClose} disabled={!dismissible} className="-mr-2 -mt-2">
@@ -345,8 +345,8 @@ export function EmptyState({
       <div className="mb-5 grid size-16 place-items-center rounded-3xl bg-primary/10 text-primary">
         {icon}
       </div>
-      <h3 className="text-[16px] font-semibold text-ink">{title}</h3>
-      <p className="mt-2 max-w-sm text-[13px] leading-6 text-ink-2">{description}</p>
+      <h3 className="text-title font-semibold text-ink">{title}</h3>
+      <p className="mt-2 max-w-sm text-body-sm leading-6 text-ink-2">{description}</p>
       {action && <div className="mt-6">{action}</div>}
     </div>
   );
@@ -365,7 +365,7 @@ export function FieldLabel({
     <div className="mb-2 flex items-center justify-between gap-2">
       <label
         htmlFor={htmlFor}
-        className="text-[12px] font-semibold tracking-[0.04em] text-ink-2"
+        className="text-label text-ink-2"
       >
         {children}
       </label>
@@ -405,7 +405,7 @@ export function Segmented<T extends string>({
             aria-pressed={active}
             onClick={() => onChange(option.value)}
             className={cn(
-              "inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-xl px-3 text-[12px] font-semibold transition-all duration-200",
+              "inline-flex h-8 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-xl px-3 text-label transition-all duration-200",
               active
                 ? "bg-card text-ink shadow-sm ring-1 ring-line"
                 : "text-ink-2 hover:bg-card/50 hover:text-ink",
@@ -473,7 +473,7 @@ export function TextInput({
       )}
       <input
         className={cn(
-          "h-11 w-full rounded-xl bg-surface-1/70 px-3.5 text-[13px] text-ink outline-none transition-colors duration-200 placeholder:text-ink-3 hover:bg-surface-1 focus:bg-card",
+          "h-11 w-full rounded-xl bg-surface-1/70 px-3.5 text-body-sm text-ink outline-none transition-colors duration-200 placeholder:text-ink-3 hover:bg-surface-1 focus:bg-card",
           leading ? "pl-10" : "",
           className,
         )}

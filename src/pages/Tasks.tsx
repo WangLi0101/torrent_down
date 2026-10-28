@@ -65,18 +65,18 @@ export default function Tasks() {
       <Card className="relative overflow-hidden">
         <div className="relative flex flex-col gap-5 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
           <div className="min-w-0">
-            <p className="text-[11px] font-semibold tracking-[0.14em] text-primary">
+            <p className="text-caption font-semibold tracking-[0.14em] text-primary">
               LIBRARY
             </p>
-            <h2 className="mt-1.5 text-[22px] font-semibold tracking-tight text-ink">
+            <h2 className="mt-1.5 text-page-title text-ink sm:text-heading">
               {active.length > 0 ? "下载进行中" : "所有任务都在你的掌控之中"}
             </h2>
-            <p className="mt-1.5 text-[13px] leading-6 text-ink-2">
+            <p className="mt-1.5 text-body-sm leading-6 text-ink-2">
               {active.length > 0 ? (
                 <>
                   <span className="font-semibold text-ink">{active.length}</span>{" "}
                   个任务正在下载，当前总速度{" "}
-                  <span className="font-semibold text-primary">
+                  <span className="font-medium tabular-nums text-primary">
                     {formatSpeed(speed)}
                   </span>
                 </>
@@ -104,7 +104,7 @@ export default function Tasks() {
                 type="button"
                 onClick={() => setFilter(item.value)}
                 className={cn(
-                  "inline-flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg px-3 text-[12px] font-semibold transition-all duration-200",
+                  "inline-flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg px-3 text-label transition-all duration-200",
                   activeFilter
                     ? "bg-card text-ink shadow-sm ring-1 ring-line"
                     : "text-ink-2 hover:bg-card/50 hover:text-ink",
@@ -113,7 +113,7 @@ export default function Tasks() {
                 {item.label}
                 <span
                   className={cn(
-                    "rounded-md px-1 text-[11px] tabular-nums",
+                    "rounded-md px-1 text-caption tabular-nums",
                     activeFilter ? "bg-primary/10 text-primary" : "text-ink-3",
                   )}
                 >
@@ -131,7 +131,7 @@ export default function Tasks() {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="搜索任务"
-              className="min-w-0 flex-1 bg-transparent text-[13px] text-ink outline-none placeholder:text-ink-3"
+              className="min-w-0 flex-1 bg-transparent text-body-sm text-ink outline-none placeholder:text-ink-3"
             />
           </label>
           <Button onClick={() => navigate("/")} className="shrink-0">
@@ -191,11 +191,11 @@ function MiniStat({
 }) {
   return (
     <div className="min-w-[74px] rounded-xl bg-surface-1/70 px-3 py-2">
-      <span className="flex items-center gap-1 text-[11px] font-medium text-ink-3">
+      <span className="flex items-center gap-1 text-caption font-medium text-ink-3">
         {icon}
         {label}
       </span>
-      <p className="mt-1 truncate text-[14px] font-semibold text-ink tabular-nums">{value}</p>
+      <p className="mt-1 truncate text-body font-semibold text-ink tabular-nums">{value}</p>
     </div>
   );
 }

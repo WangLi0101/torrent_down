@@ -64,7 +64,7 @@ export function SnackbarProvider({ children }: { children: ReactNode }) {
                 >
                   <Icon className="h-[18px] w-[18px]" />
                 </span>
-                <p className="min-w-0 flex-1 whitespace-pre-line break-words pt-1.5 text-[13px] leading-relaxed text-ink">
+                <p className="min-w-0 flex-1 whitespace-pre-line break-words pt-1.5 text-body-sm leading-relaxed text-ink">
                   {toast.message}
                 </p>
                 <button

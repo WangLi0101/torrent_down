@@ -24,10 +24,10 @@ export function TopBar() {
     <header className="glass relative z-10 flex h-[68px] shrink-0 items-center gap-3 border-b border-line px-4 sm:h-[76px] sm:px-6">
       <BrandMark className="h-8 w-8 shrink-0 rounded-[10px] md:hidden" />
       <div className="min-w-0 flex-1">
-        <h1 className="truncate text-[18px] font-semibold leading-tight tracking-tight text-ink">
+        <h1 className="truncate text-page-title text-ink">
           {meta.title}
         </h1>
-        <p className="mt-0.5 truncate text-[12px] text-ink-2">
+        <p className="mt-1 truncate text-body-sm text-ink-2">
           {meta.subtitle}
         </p>
       </div>

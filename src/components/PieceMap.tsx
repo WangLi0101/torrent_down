@@ -16,7 +16,7 @@ function downloadedPieces(bitmap: string, total: number, progress: number) {
 
 export function PieceMap({ bitmap, totalPieces, progress }: { bitmap: string; totalPieces: number; progress: number }) {
   const pieces = useMemo(() => downloadedPieces(bitmap, totalPieces, progress), [bitmap, totalPieces, progress]);
-  if (!totalPieces) return <div className="p-8 text-center text-sm text-ink-3">元数据就绪后显示分片分布</div>;
+  if (!totalPieces) return <div className="p-8 text-center text-body text-ink-3">元数据就绪后显示分片分布</div>;
   const visiblePieces = Math.min(totalPieces, 512);
   return (
     <div>
@@ -33,7 +33,7 @@ export function PieceMap({ bitmap, totalPieces, progress }: { bitmap: string; to
           );
         })}
       </div>
-      <div className="mt-4 flex items-center justify-between text-[12px] text-ink-3">
+      <div className="mt-4 flex items-center justify-between text-caption text-ink-3">
         <span>{totalPieces.toLocaleString()} 个分片{totalPieces > visiblePieces ? ` · 合并为 ${visiblePieces} 格` : ""}</span>
         <span className="flex items-center gap-3"><span className="flex items-center gap-1.5"><i className="size-2 rounded-[1px] bg-primary" />已下载</span><span className="flex items-center gap-1.5"><i className="size-2 rounded-[1px] bg-surface-2" />等待</span></span>
       </div>

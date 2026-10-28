@@ -110,7 +110,7 @@ export default function Settings() {
   return (
     <div className="space-y-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-[13px] text-ink-2">
+        <p className="text-body-sm text-ink-2">
           所有设置都保存在本机，修改主题与强调色会立即生效。
         </p>
         <div>
@@ -167,7 +167,7 @@ export default function Settings() {
                       </span>
                       <span
                         className={cn(
-                          "text-[13px] font-medium",
+                          "text-body-sm font-medium",
                           active ? "text-primary" : "text-ink-2",
                         )}
                       >
@@ -179,7 +179,7 @@ export default function Settings() {
               </div>
             </div>
 
-            <p className="mt-4 text-[12px] leading-relaxed text-ink-3">
+            <p className="mt-4 text-caption leading-relaxed text-ink-3">
               强调色会同步应用到按钮、进度条、导航与图表，并自动保存。
             </p>
           </SectionCard>
@@ -199,7 +199,7 @@ export default function Settings() {
                       id="download-dir"
                       value={draft.downloadDir}
                       onChange={(event) => update("downloadDir", event.target.value)}
-                      className="min-w-0 flex-1 bg-transparent text-[13px] text-ink outline-none"
+                      className="min-w-0 flex-1 bg-transparent text-body-sm text-ink outline-none"
                     />
                   </div>
                   <Button
@@ -223,7 +223,7 @@ export default function Settings() {
                   options={selectOptions}
                   className="w-full justify-between sm:w-auto sm:justify-start"
                 />
-                <p className="mt-3 flex items-start gap-1.5 text-[12px] leading-5 text-ink-3">
+                <p className="mt-3 flex items-start gap-1.5 text-caption leading-5 text-ink-3">
                   <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                   选择「仅视频」会自动勾选常见视频格式，仍可在添加任务时手动调整。
                 </p>
@@ -252,9 +252,9 @@ export default function Settings() {
                         Math.round(Math.max(0, Number(event.target.value)) * 1024 * 1024),
                       )
                     }
-                    className="min-w-0 flex-1 bg-transparent text-[13px] text-ink outline-none"
+                    className="min-w-0 flex-1 bg-transparent text-body-sm text-ink outline-none"
                   />
-                  <span className="text-[12px] text-ink-3">MiB/s</span>
+                  <span className="text-caption text-ink-3">MiB/s</span>
                 </div>
               </div>
               <div>
@@ -272,9 +272,9 @@ export default function Settings() {
                         Math.round(Math.max(0, Number(event.target.value)) * 1024 * 1024),
                       )
                     }
-                    className="min-w-0 flex-1 bg-transparent text-[13px] text-ink outline-none"
+                    className="min-w-0 flex-1 bg-transparent text-body-sm text-ink outline-none"
                   />
-                  <span className="text-[12px] text-ink-3">MiB/s</span>
+                  <span className="text-caption text-ink-3">MiB/s</span>
                 </div>
               </div>
             </div>
@@ -286,19 +286,19 @@ export default function Settings() {
             icon={<Wifi className="h-[18px] w-[18px]" />}
             action={<Chip tone="success">运行中</Chip>}
           >
-            <div className="grid grid-cols-2 gap-3 rounded-xl bg-surface-1/60 p-4 text-[12px]">
+            <div className="grid grid-cols-2 gap-3 rounded-xl bg-surface-1/60 p-4 text-caption">
               <div>
                 <span className="text-ink-3">监听地址</span>
-                <p className="mt-1.5 font-mono text-[13px] text-ink">127.0.0.1</p>
+                <p className="mt-1.5 font-mono text-body-sm text-ink">127.0.0.1</p>
               </div>
               <div>
                 <span className="text-ink-3">端口</span>
-                <p className="mt-1.5 font-mono text-[13px] text-ink">
+                <p className="mt-1.5 font-mono text-body-sm text-ink">
                   {draft.streamPort || "启动时自动分配"}
                 </p>
               </div>
             </div>
-            <p className="mt-4 flex items-start gap-2 text-[12px] leading-5 text-ink-3">
+            <p className="mt-4 flex items-start gap-2 text-caption leading-5 text-ink-3">
               <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
               请仅下载和播放你有权访问的内容。TorrNet 不提供资源搜索或内容推荐。
             </p>
@@ -319,8 +319,8 @@ export default function Settings() {
         <div className="space-y-5 xl:sticky xl:top-0">
           <Card className="p-5">
             <div className="flex items-center justify-between gap-2">
-              <h2 className="text-[14px] font-semibold text-ink">实时预览</h2>
-              <span className="rounded-lg bg-primary/10 px-2 py-1 text-[11px] font-medium text-primary">
+              <h2 className="text-body font-semibold text-ink">实时预览</h2>
+              <span className="rounded-lg bg-primary/10 px-2 py-1 text-caption font-medium text-primary">
                 {mode === "dark" ? "深色" : "浅色"} · {accent.name}
               </span>
             </div>
@@ -339,38 +339,38 @@ export default function Settings() {
 
               <div className="mt-3 rounded-xl border border-line bg-card p-3 shadow-sm">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="truncate text-[10px] font-semibold text-ink">
+                  <span className="truncate text-mini font-semibold text-ink">
                     正在下载 · 示例任务
                   </span>
-                  <span className="text-[9px] font-bold text-primary">68%</span>
+                  <span className="text-mini font-bold text-primary">68%</span>
                 </div>
                 <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface-2">
                   <div className="h-full w-[68%] rounded-full bg-primary" />
                 </div>
-                <div className="mt-2 flex items-center justify-between text-[8.5px] text-ink-3">
+                <div className="mt-2 flex items-center justify-between text-mini text-ink-3">
                   <span>8.4 MB/s</span>
                   <span>剩余 5 分钟</span>
                 </div>
               </div>
 
               <div className="mt-3 flex gap-2">
-                <span className="flex h-7 flex-1 items-center justify-center rounded-lg bg-primary text-[10px] font-medium text-on-primary">
+                <span className="flex h-7 flex-1 items-center justify-center rounded-lg bg-primary text-mini font-medium text-on-primary">
                   开始播放
                 </span>
-                <span className="flex h-7 items-center justify-center rounded-lg bg-primary/10 px-3 text-[9px] font-semibold text-primary">
+                <span className="flex h-7 items-center justify-center rounded-lg bg-primary/10 px-3 text-mini font-semibold text-primary">
                   详情
                 </span>
               </div>
             </div>
 
-            <p className="mt-3 text-[11px] leading-relaxed text-ink-3">
+            <p className="mt-3 text-caption leading-relaxed text-ink-3">
               预览使用当前主题与强调色，实际界面会即时切换。
             </p>
           </Card>
 
           <Card className="p-5">
-            <h2 className="text-[14px] font-semibold text-ink">当前配置</h2>
-            <div className="mt-4 space-y-3 text-[13px]">
+            <h2 className="text-body font-semibold text-ink">当前配置</h2>
+            <div className="mt-4 space-y-3 text-body-sm">
               <SummaryRow label="主题模式" value={mode === "dark" ? "深色" : "浅色"} />
               <SummaryRow label="强调色" value={accent.name} />
               <SummaryRow
@@ -394,11 +394,11 @@ export default function Settings() {
               />
             </div>
             <div className="mt-4 rounded-xl bg-surface-1/60 p-3">
-              <div className="flex items-center gap-2 text-[12px] font-medium text-ink">
+              <div className="flex items-center gap-2 text-caption font-medium text-ink">
                 <ShieldCheck className="h-4 w-4 text-success" />
                 本地优先与隐私保护
               </div>
-              <p className="mt-1.5 text-[12px] leading-5 text-ink-3">
+              <p className="mt-1.5 text-caption leading-5 text-ink-3">
                 磁力解析、下载与播放全部在本机完成，视频流只监听 127.0.0.1。
               </p>
             </div>
@@ -430,7 +430,7 @@ function SummaryRow({
       <span
         className={cn(
           "truncate text-right font-medium text-ink",
-          mono && "font-mono text-[11px]",
+          mono && "font-mono text-caption",
         )}
         title={value}
       >

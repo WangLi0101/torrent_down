@@ -115,16 +115,15 @@ export function TaskCard({
             >
               <h3
                 className={cn(
-                  "truncate font-semibold tracking-tight text-ink transition-colors group-hover:text-primary",
-                  compact ? "text-[14px]" : "text-[15px]",
+                  "truncate text-body font-medium text-ink transition-colors group-hover:text-primary",
                 )}
               >
                 {task.name}
               </h3>
-              <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] text-ink-3">
+              <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-caption tabular-nums text-ink-3">
                 <span
                   className={cn(
-                    "inline-flex items-center gap-1.5 rounded-md px-1.5 py-0.5 font-semibold",
+                    "inline-flex items-center gap-1.5 rounded-md px-1.5 py-0.5 font-medium",
                     stateTones[task.state],
                   )}
                 >
@@ -191,12 +190,12 @@ export function TaskCard({
 
           <div className="mt-3 flex items-center gap-3">
             <ProgressBar value={task.progress} className="flex-1" />
-            <span className="w-9 text-right text-[11px] font-semibold tabular-nums text-ink-2">
+            <span className="w-9 text-right text-caption font-semibold tabular-nums text-ink-2">
               {Math.floor(task.progress * 100)}%
             </span>
           </div>
 
-          <div className="mt-2 flex min-h-6 items-center justify-between gap-3 text-[12px] text-ink-3">
+          <div className="mt-2 flex min-h-6 items-center justify-between gap-3 text-caption tabular-nums text-ink-3">
             <span className="truncate">
               {task.state === "Downloading"
                 ? `${formatSpeed(task.downSpeed)} · 剩余 ${formatEta(task.eta)}`
@@ -208,7 +207,7 @@ export function TaskCard({
                   variant="text"
                   size="sm"
                   onClick={() => void play()}
-                  className="-mr-2 h-7 px-2.5 text-[12px]"
+                  className="-mr-2 h-7 px-2.5 text-caption"
                 >
                   <Play size={13} fill="currentColor" />
                   播放
@@ -229,10 +228,10 @@ export function TaskCard({
             : "仅移除任务记录，已下载文件会保留在磁盘中。"
         }
       >
-        <p className="mb-4 break-words rounded-xl bg-primary/8 px-3 py-2.5 text-[13px] font-medium text-ink">
+        <p className="mb-4 break-words rounded-xl bg-primary/8 px-3 py-2.5 text-body-sm font-medium text-ink">
           {task.name}
         </p>
-        <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-line bg-surface-1/60 p-3 text-[13px] text-ink">
+        <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-line bg-surface-1/60 p-3 text-body-sm text-ink">
           <input
             type="checkbox"
             checked={deleteFiles}
