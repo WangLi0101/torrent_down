@@ -1,0 +1,392 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: "Inter", "SF Pro Display", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "system-ui", "-apple-system", "sans-serif";
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary: var(--on-primary);
+  --color-secondary: var(--secondary);
+
+  --color-surface: var(--surface);
+  --color-card: var(--card);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-stage: var(--stage);
+
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-float: var(--shadow-float);
+
+  --radius-4xl: 20px;
+  --radius-5xl: 24px;
+}
+
+:root {
+  --primary: #5b57e8;
+  --primary-hover: #4b46dc;
+  --on-primary: #ffffff;
+  --secondary: #9d62f5;
+
+  /* Tint shared surfaces with the active accent, including disabled controls. */
+  --surface: color-mix(in srgb, var(--primary) 5%, #fafafa);
+  --card: #ffffff;
+  --surface-1: color-mix(in srgb, var(--primary) 8%, #fafafa);
+  --surface-2: color-mix(in srgb, var(--primary) 13%, #fafafa);
+  --surface-3: color-mix(in srgb, var(--primary) 20%, #fafafa);
+  --stage: color-mix(in srgb, var(--primary) 9%, #fafafa);
+
+  --ink: color-mix(in srgb, var(--primary) 8%, #19191b);
+  --ink-2: color-mix(in srgb, var(--primary) 12%, #606064);
+  --ink-3: color-mix(in srgb, var(--primary) 10%, #8b8b91);
+
+  --line: color-mix(in srgb, var(--ink) 9%, transparent);
+  --line-strong: color-mix(in srgb, var(--ink) 18%, transparent);
+  --success: #0c8a63;
+  --warning: #a96600;
+  --danger: #b3261e;
+
+  --shadow-card: 0 1px 2px color-mix(in srgb, var(--ink) 4%, transparent),
+    0 10px 30px -24px color-mix(in srgb, var(--ink) 25%, transparent);
+  --shadow-float: 0 18px 44px -22px color-mix(in srgb, var(--ink) 22%, transparent);
+
+  --player-accent: #8b85ff;
+
+  color-scheme: light;
+}
+
+.dark {
+  --surface: color-mix(in srgb, var(--primary) 2%, #0c0c0e);
+  --card: color-mix(in srgb, var(--primary) 4%, #141416);
+  --surface-1: color-mix(in srgb, var(--primary) 6%, #1a1a1d);
+  --surface-2: color-mix(in srgb, var(--primary) 8%, #212124);
+  --surface-3: color-mix(in srgb, var(--primary) 10%, #29292d);
+  --stage: color-mix(in srgb, var(--primary) 3%, #0e0e11);
+
+  --ink: color-mix(in srgb, var(--primary) 4%, #eeeeef);
+  --ink-2: color-mix(in srgb, var(--primary) 8%, #adadb3);
+  --ink-3: color-mix(in srgb, var(--primary) 8%, #7c7c84);
+
+  --line: color-mix(in srgb, var(--ink) 10%, transparent);
+  --line-strong: color-mix(in srgb, var(--ink) 20%, transparent);
+  --success: #6fddb5;
+  --warning: #f5c56b;
+  --danger: #ffb4ab;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35),
+    0 10px 30px -24px rgba(0, 0, 0, 0.8);
+  --shadow-float: 0 18px 44px -22px rgba(0, 0, 0, 0.75);
+
+  --player-accent: #b0a9ff;
+
+  color-scheme: dark;
+}
+
+[data-accent="ocean"] {
+  --primary: #0b6bcb;
+  --primary-hover: #095cae;
+  --secondary: #0e9fb5;
+  --player-accent: #4d9dff;
+}
+
+.dark[data-accent="ocean"] {
+  --primary: #a9c7ff;
+  --primary-hover: #c4d8ff;
+  --on-primary: #002f65;
+  --secondary: #5dd5e4;
+  --player-accent: #8cc2ff;
+}
+
+[data-accent="forest"] {
+  --primary: #0e7c5a;
+  --primary-hover: #0b6a4d;
+  --secondary: #6baf3c;
+  --player-accent: #34c08f;
+}
+
+.dark[data-accent="forest"] {
+  --primary: #7fddb8;
+  --primary-hover: #a2ead0;
+  --on-primary: #003826;
+  --secondary: #b9dc7b;
+  --player-accent: #6fe3b6;
+}
+
+[data-accent="amber"] {
+  --primary: #a9570a;
+  --primary-hover: #914a07;
+  --secondary: #d89512;
+  --player-accent: #ffa43c;
+}
+
+.dark[data-accent="amber"] {
+  --primary: #ffb870;
+  --primary-hover: #ffca94;
+  --on-primary: #4a2800;
+  --secondary: #f0c558;
+  --player-accent: #ffc178;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+html {
+  background: var(--surface);
+}
+
+body {
+  margin: 0;
+  min-width: 360px;
+  overflow: hidden;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+a,
+input,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--primary) 70%, transparent);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--primary) 24%, transparent);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--ink-3) 32%, transparent);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--ink-3) 52%, transparent);
+  background-clip: content-box;
+}
+
+input[type="password"]::-ms-reveal {
+  display: none;
+}
+
+.magnet-submit:disabled {
+  background-color: color-mix(in srgb, var(--primary) 15%, var(--card));
+  color: color-mix(in srgb, var(--primary) 70%, var(--ink-2));
+}
+
+@layer utilities {
+  .bg-primary-soft {
+    background-color: color-mix(in srgb, var(--primary) 12%, transparent);
+  }
+
+  .bg-primary-soft-strong {
+    background-color: color-mix(in srgb, var(--primary) 20%, transparent);
+  }
+
+  .glass {
+    background: color-mix(in srgb, var(--surface) 78%, transparent);
+    backdrop-filter: blur(20px) saturate(1.2);
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .animate-fade-up {
+    animation: fade-up 0.45s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.24s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  }
+
+  .animate-toast-in {
+    animation: toast-in 0.32s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+  }
+
+  .animate-float {
+    animation: float-slow 9s ease-in-out infinite;
+  }
+
+  .animate-float-delayed {
+    animation: float-slow 11s ease-in-out -4s infinite;
+  }
+
+  .animate-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .animate-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--ink) 7%, transparent),
+      transparent
+    );
+    animation: shimmer 1.8s infinite;
+  }
+
+  .animate-pulse-dot {
+    animation: pulse-dot 1.4s ease-in-out infinite;
+  }
+
+  .animate-spin-slow {
+    animation: spin 3.4s linear infinite;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.965);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -16px, 0) rotate(3deg);
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 播放器 */
+
+.art-video-player {
+  width: 100%;
+  height: 100%;
+  background: #08090c;
+}
+
+.art-video-player .art-bottom,
+.art-video-player .art-setting,
+.art-video-player .art-contextmenu {
+  display: none !important;
+}
+
+.art-video-player .art-video {
+  object-fit: contain;
+}
+
+.art-video-player .art-loading {
+  display: none;
+}
+
+input[type="range"] {
+  accent-color: var(--player-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
